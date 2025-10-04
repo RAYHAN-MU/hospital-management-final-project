@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hospital Management System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f5f5;
+            min-height: 100vh;
+            padding-bottom: 80px;
+        }
+
+        header {
+            background-color: #8B0000;
+            color: white;
+            padding: 25px;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        header h1 {
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        nav {
+            background-color: #f2f2f2;
+            padding: 15px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        nav ul li {
+            display: inline-block;
+        }
+
+        nav ul li button {
+            background-color: transparent;
+            color: #333;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        nav ul li button:hover {
+            background-color: blue;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        nav ul li button.active {
+            background-color: blue;
+            color: white;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        .section {
+            display: none;
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+            animation: fadeIn 0.5s ease;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        h2 {
+            color: #2a5298;
+            margin-bottom: 20px;
+            font-size: 2em;
+            text-align: center;
+        }
+
+        .welcome-content {
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .welcome-content p {
+            font-size: 1.2em;
+            color: #555;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        .auth-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .btn {
+            padding: 15px 40px;
+            border: none;
+            border-radius: 30px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background-color: #8B0000;
+            color: white;
+        }
+
+        .btn-secondary {
+            background-color: #8B0000;
+            color: white;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background: white;
+            overflow: hidden;
+            border-radius: 10px;
+        }
+
+        table thead {
+            background-color: #0D47A1;
+            color: white;
+        }
+
+        table th, table td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        table tbody tr:hover {
+            background: #f5f5f5;
+            transition: background 0.3s ease;
+        }
+
+        form {
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 600;
+        }
+
+        input[type="text"],
+        input[type="password"],
+        input[type="email"] {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+        }
+
+        input[type="text"]:focus,
+        input[type="password"]:focus,
+        input[type="email"]:focus {
+            outline: none;
+            border-color: #0D47A1;
+        }
+
+        input[type="submit"] {
+            width: 100%;
+            padding: 15px;
+            background-color: #0D47A1;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #0a3a7d;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(13, 71, 161, 0.4);
+        }
+
+        footer {
+            background-color: #8B0000;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            box-shadow: 0 -4px 6px rgba(0,0,0,0.1);
+        }
+
+        .search-box {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .search-box input {
+            padding: 10px 20px;
+            width: 300px;
+            border: 2px solid #0D47A1;
+            border-radius: 25px;
+            font-size: 16px;
+        }
+
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 1.8em;
+            }
+
+            nav ul {
+                justify-content: center;
+            }
+
+            .auth-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            table {
+                font-size: 14px;
+            }
+
+            table th, table td {
+                padding: 10px 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>🏥 Hospital Management System</h1>
+    </header>
+
+    <nav>
+        <ul>
+            <li><button onclick="showSection('home')" class="active" id="nav-home">Home</button></li>
+            <li><button onclick="showSection('patients')" id="nav-patients">Patients</button></li>
+            <li><button onclick="showSection('appointments')" id="nav-appointments">Appointments</button></li>
+            <li><button onclick="showSection('doctors')" id="nav-doctors">Doctors</button></li>
+            <li><button onclick="showSection('reports')" id="nav-reports">Reports</button></li>
+        </ul>
+    </nav>
+
+    <div class="container">
+        <!-- Home Section -->
+        <div id="home" class="section active">
+            <div class="welcome-content">
+                <h2>Welcome to the Hospital Management System</h2>
+                <p>This system provides an efficient and integrated solution for managing patient records, appointments, doctors, and generating reports for a hospital. Experience seamless healthcare management with our comprehensive platform.</p>
+                <div class="auth-buttons">
+                    <button class="btn btn-primary" onclick="showSection('signup')">Sign Up</button>
+                    <button class="btn btn-secondary" onclick="showSection('signin')">Sign In</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Patients Section -->
+        <div id="patients" class="section">
+            <h2>Patient Records</h2>
+            <div class="search-box">
+                <input type="text" id="patientSearch" placeholder="Search patients..." onkeyup="searchTable('patientSearch', 'patientsTable')">
+            </div>
+            <table id="patientsTable">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Patient Name</th>
+                        <th>Age</th>
+                        <th>Gender</th>
+                        <th>Contact</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td>001</td><td>John Doe</td><td>35</td><td>Male</td><td>john.doe@example.com</td></tr>
+                    <tr><td>002</td><td>Jane Smith</td><td>42</td><td>Female</td><td>jane.smith@example.com</td></tr>
+                    <tr><td>003</td><td>Michael Brown</td><td>28</td><td>Male</td><td>michael.brown@example.com</td></tr>
+                    <tr><td>004</td><td>Emily Davis</td><td>31</td><td>Female</td><td>emily.davis@example.com</td></tr>
+                    <tr><td>005</td><td>Robert Wilson</td><td>45</td><td>Male</td><td>robert.wilson@example.com</td></tr>
+                    <tr><td>006</td><td>Sarah Taylor</td><td>38</td><td>Female</td><td>sarah.taylor@example.com</td></tr>
+                    <tr><td>007</td><td>David Martinez</td><td>52</td><td>Male</td><td>david.martinez@example.com</td></tr>
+                    <tr><td>008</td><td>Lisa Anderson</td><td>29</td><td>Female</td><td>lisa.anderson@example.com</td></tr>
+                    <tr><td>009</td><td>James Thomas</td><td>41</td><td>Male</td><td>james.thomas@example.com</td></tr>
+                    <tr><td>010</td><td>Patricia Jackson</td><td>36</td><td>Female</td><td>patricia.jackson@example.com</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Appointments Section -->
+        <div id="appointments" class="section">
+            <h2>Appointments Schedule</h2>
+            <div class="search-box">
+                <input type="text" id="appointmentSearch" placeholder="Search appointments..." onkeyup="searchTable('appointmentSearch', 'appointmentsTable')">
+            </div>
+            <table id="appointmentsTable">
+                <thead>
+                    <tr>
+                        <th>Patient ID</th>
+                        <th>Patient Name</th>
+                        <th>Date</th>
+                        <th>Time</th>
+                        <th>Doctor Name</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td>001</td><td>John Doe</td><td>2025-10-05</td><td>09:00 AM</td><td>Dr. Smith</td></tr>
+                    <tr><td>002</td><td>Jane Smith</td><td>2025-10-05</td><td>10:30 AM</td><td>Dr. Johnson</td></tr>
+                    <tr><td>003</td><td>Michael Brown</td><td>2025-10-06</td><td>11:00 AM</td><td>Dr. Wilson</td></tr>
+                    <tr><td>004</td><td>Emily Davis</td><td>2025-10-06</td><td>02:00 PM</td><td>Dr. Martinez</td></tr>
+                    <tr><td>005</td><td>Robert Wilson</td><td>2025-10-07</td><td>09:30 AM</td><td>Dr. Anderson</td></tr>
+                    <tr><td>006</td><td>Sarah Taylor</td><td>2025-10-07</td><td>03:00 PM</td><td>Dr. Brown</td></tr>
+                    <tr><td>007</td><td>David Martinez</td><td>2025-10-08</td><td>10:00 AM</td><td>Dr. Smith</td></tr>
+                    <tr><td>008</td><td>Lisa Anderson</td><td>2025-10-08</td><td>01:30 PM</td><td>Dr. Taylor</td></tr>
+                    <tr><td>009</td><td>James Thomas</td><td>2025-10-09</td><td>11:30 AM</td><td>Dr. Wilson</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Doctors Section -->
+        <div id="doctors" class="section">
+            <h2>Medical Staff</h2>
+            <div class="search-box">
+                <input type="text" id="doctorSearch" placeholder="Search doctors..." onkeyup="searchTable('doctorSearch', 'doctorsTable')">
+            </div>
+            <table id="doctorsTable">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Specialty</th>
+                        <th>Contact</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td>001</td><td>Dr. John Smith</td><td>Cardiology</td><td>john.smith@hospital.com</td></tr>
+                    <tr><td>002</td><td>Dr. Sarah Johnson</td><td>Neurology</td><td>sarah.johnson@hospital.com</td></tr>
+                    <tr><td>003</td><td>Dr. Michael Wilson</td><td>Pediatrics</td><td>michael.wilson@hospital.com</td></tr>
+                    <tr><td>004</td><td>Dr. Emily Martinez</td><td>Orthopedics</td><td>emily.martinez@hospital.com</td></tr>
+                    <tr><td>005</td><td>Dr. Robert Anderson</td><td>Dermatology</td><td>robert.anderson@hospital.com</td></tr>
+                    <tr><td>006</td><td>Dr. Lisa Brown</td><td>Oncology</td><td>lisa.brown@hospital.com</td></tr>
+                    <tr><td>007</td><td>Dr. David Taylor</td><td>General Surgery</td><td>david.taylor@hospital.com</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Reports Section -->
+        <div id="reports" class="section">
+            <h2>Medical Reports</h2>
+            <div class="search-box">
+                <input type="text" id="reportSearch" placeholder="Search reports..." onkeyup="searchTable('reportSearch', 'reportsTable')">
+            </div>
+            <table id="reportsTable">
+                <thead>
+                    <tr>
+                        <th>Patient ID</th>
+                        <th>Patient Name</th>
+                        <th>Doctor Name</th>
+                        <th>Date</th>
+                        <th>Report Type</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td>001</td><td>John Doe</td><td>Dr. Smith</td><td>2025-09-15</td><td>Blood Test</td></tr>
+                    <tr><td>002</td><td>Jane Smith</td><td>Dr. Johnson</td><td>2025-09-16</td><td>MRI Scan</td></tr>
+                    <tr><td>003</td><td>Michael Brown</td><td>Dr. Wilson</td><td>2025-09-17</td><td>X-Ray</td></tr>
+                    <tr><td>004</td><td>Emily Davis</td><td>Dr. Martinez</td><td>2025-09-18</td><td>CT Scan</td></tr>
+                    <tr><td>005</td><td>Robert Wilson</td><td>Dr. Anderson</td><td>2025-09-19</td><td>Ultrasound</td></tr>
+                    <tr><td>006</td><td>Sarah Taylor</td><td>Dr. Brown</td><td>2025-09-20</td><td>Biopsy Report</td></tr>
+                    <tr><td>007</td><td>David Martinez</td><td>Dr. Smith</td><td>2025-09-21</td><td>ECG</td></tr>
+                    <tr><td>008</td><td>Lisa Anderson</td><td>Dr. Taylor</td><td>2025-09-22</td><td>Blood Test</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Sign Up Section -->
+        <div id="signup" class="section">
+            <h2>Create Account</h2>
+            <form onsubmit="handleSignUp(event)">
+                <div class="form-group">
+                    <label for="signup-username">Username</label>
+                    <input type="text" id="signup-username" name="username" required>
+                </div>
+                <div class="form-group">
+                    <label for="signup-email">Email</label>
+                    <input type="email" id="signup-email" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="signup-password">Password</label>
+                    <input type="password" id="signup-password" name="password" required>
+                </div>
+                <input type="submit" value="Sign Up">
+            </form>
+        </div>
+
+        <!-- Sign In Section -->
+        <div id="signin" class="section">
+            <h2>Sign In</h2>
+            <form onsubmit="handleSignIn(event)">
+                <div class="form-group">
+                    <label for="signin-username">Username</label>
+                    <input type="text" id="signin-username" name="username" required>
+                </div>
+                <div class="form-group">
+                    <label for="signin-password">Password</label>
+                    <input type="password" id="signin-password" name="password" required>
+                </div>
+                <input type="submit" value="Sign In">
+            </form>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2025 Hospital Management System. All rights reserved.</p>
+    </footer>
+
+    <script>
+        function showSection(sectionId) {
+            const sections = document.querySelectorAll('.section');
+            sections.forEach(section => {
+                section.classList.remove('active');
+            });
+
+            const navButtons = document.querySelectorAll('nav button');
+            navButtons.forEach(button => {
+                button.classList.remove('active');
+            });
+
+            document.getElementById(sectionId).classList.add('active');
+            document.getElementById('nav-' + sectionId)?.classList.add('active');
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function searchTable(inputId, tableId) {
+            const input = document.getElementById(inputId);
+            const filter = input.value.toLowerCase();
+            const table = document.getElementById(tableId);
+            const rows = table.getElementsByTagName('tr');
+
+            for (let i = 1; i < rows.length; i++) {
+                let found = false;
+                const cells = rows[i].getElementsByTagName('td');
+                
+                for (let j = 0; j < cells.length; j++) {
+                    if (cells[j].textContent.toLowerCase().includes(filter)) {
+                        found = true;
+                        break;
+                    }
+                }
+                
+                rows[i].style.display = found ? '' : 'none';
+            }
+        }
+
+        function handleSignUp(event) {
+            event.preventDefault();
+            const username = document.getElementById('signup-username').value;
+            alert('Sign up successful! Welcome, ' + username + '!');
+            showSection('home');
+        }
+
+        function handleSignIn(event) {
+            event.preventDefault();
+            const username = document.getElementById('signin-username').value;
+            alert('Sign in successful! Welcome back, ' + username + '!');
+            showSection('home');
+        }
+    </script>
+</body>
+</html>
